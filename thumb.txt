@@ -1,0 +1,7 @@
+1. Load csv
+2. Load each line into array
+3. Plot onto d3
+4. Start at x/2+offset, y/2+offset 
+5. Draw arc with length based on feature value 
+6. Draw next feature at x/2+offset + prev_x, y/2+offset +prev_y
+7. Continue untl end of features 
