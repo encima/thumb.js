@@ -1,16 +1,7 @@
 window.onload = function() {
 
 	var sample = ['a', 3, 2.5, 8, 0.7, 7, 2.3, 1.7];
-/*	var canvas = document.getElementById('plots');
-
-	var ctx = canvas.getContext('2d');
-	ctx.fillStyle = 'blue';
-	ctx.lineWidth = 5;
-	var offset = 10;
-	var startX = (canvas.width / 2) + offset;
-	var startY = (canvas.height / 2) + offset;
-	console.log(startX);*/
-	var vis = d3.select("svg")
+	var vis = d3.select("#thumb")
 	var pi = Math.PI;
 
 	function drawArc(x, y, sAng, eAng, opacity, radius, thickness) {
@@ -21,7 +12,6 @@ window.onload = function() {
 			.startAngle(sAng * (pi/180)) //converting from degs to radians
 			.endAngle(eAng * (pi/180)) //just radians
 
-		console.log(arc);
 			
 		vis.append("path")
 			.attr("d", arc)
@@ -35,7 +25,6 @@ window.onload = function() {
 			sAngle = 50;
 		for(var i = 1; i < 9; i++) {
 			ctx.beginPath();
-			//ctx.ellipse(100, 100, 50, 75, 45 * Math.PI/180, 0, 2 * Math.PI);
 			ctx.ellipse(x, y, sAngle * i, sAngle * i-50, 1.571, 2*Math.PI, 0);
 			ctx.stroke();
 		}
@@ -58,16 +47,33 @@ window.onload = function() {
 
 	sampleDrawPrint();
 
-	//drawArc(150, 150, 180, 90, .8);
-	/*ctx.beginPath();
-	ctx.arc(175, 175, 50, 0, 2* Math.PI);
-	ctx.stroke();*/
-/*	for(var i = 1; i < sample.length; i++) {
-		var feature = sample[i];
-		ctx.beginPath();
-		ctx.moveTo(startX, startY);
-		ctx.arcTo(startX, startY, startX + feature, startY + feature, 100);
-		ctx.stroke();
-	}	*/
+	 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+		  var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
 
+	   return {
+		x: centerX + (radius * Math.cos(angleInRadians)),
+		y: centerY + (radius * Math.sin(angleInRadians))
+	   };
+	  }
+
+	 function describeArc(x, y, radius, startAngle, endAngle){
+
+		var start = polarToCartesian(x, y, radius, endAngle);
+		var end = polarToCartesian(x, y, radius, startAngle);
+
+		var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+
+		var d = [
+			"M", start.x, start.y, 
+			"A", radius, radius, 1, arcSweep, 0, end.x, end.y,
+			"L", x,y,
+			"L", start.x, start.y,
+			"innerRadius", 100,
+			"outerRadius", 50,
+			].join(" ");
+
+		   return d;       
+	  }
+
+	d3.select("#arc1").append("path").attr("d", describeArc(200, 200, 100, 0, 90));
 };
