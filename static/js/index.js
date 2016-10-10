@@ -84,9 +84,10 @@ window.onload = function() {
 
 	d3.csv("./static/data/FP.csv", function(data) {
 		sampleDrawPrint();
-		var maybe = Object.keys( data ).map(function ( key ) { return data[key]; });
-		console.log(maybe);
+		console.log(data);
+		var maybe = Object.keys( data ).map(function ( key ) { return data[key]["all E"]; });
 		var max = Math.max.apply( null, maybe );
+		var min = Math.max.apply( null, maybe );
 		console.log(max);
 		for (var index in data) {
 			for(var key in data[index]) {
