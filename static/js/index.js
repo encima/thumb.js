@@ -12,11 +12,28 @@ window.onload = function() {
 			.startAngle(sAng * (pi/180)) //converting from degs to radians
 			.endAngle(eAng * (pi/180)) //just radians
 
-			
-		vis.append("path")
+
+		var path = vis.append("path")
 			.attr("d", arc)
+			.attr("stroke", "steelblue")
+      .attr("stroke-width", "5")
+      .attr("fill", "gray")
 			.attr("opacity", opacity)
 			.attr("transform", "translate(" + x + "," + y + ")")
+
+		var totalLength = path.node().getTotalLength();
+
+		// vis.on("click", function() {
+		// 	path
+		// 		.attr("stroke-dasharray", totalLength + " " + totalLength)
+		// 		.attr("stroke-dashoffset", totalLength)
+		// 		.transition()
+		// 		.duration(2000)
+		// 		.ease("linear")
+		// 		.attr("stroke-dashoffset", 0);
+		// });
+
+
 	}
 
 	function pureDrawArc() {
@@ -31,49 +48,56 @@ window.onload = function() {
 	}
 
 	function sampleDrawPrint() {
-	
-		drawArc(150, 150, 0, 90, .2, 60, 10);
-		drawArc(150, 150, 90, 270, .4, 60, 10);
-		drawArc(150, 150, 180, 360, .2, 60, 10);	
+		var sx = 150,
+		    sy = 150,
+				start = 60;
+		for (var i = 10; i <= 60; i+=20) {
+			// array[i]
+			// for (var j = 0; j < 8; j++) {
+			drawArc(150, 150, 0, 90, .6, start + i, 10);
+			drawArc(150, 150, 90, 270, .6, start + i, 10);
+			drawArc(150, 150, 270, 360, .6, start + i, 10);
+			// }
+		}
 
-		drawArc(150, 150, 0, 360, .2, 80, 10);
+		// drawArc(150, 150, 0, 90, .6, 60, 10);
+		// drawArc(150, 150, 0, 90, .6, 80, 10);
+		// drawArc(150, 150, 0, 90, .6, 100, 10);
 
-		drawArc(150, 150, 0, 360, .2, 100, 10);
-
-		drawArc(150, 150, 0, 180, .4, 120, 10);
-		drawArc(150, 150, 180, 360, .8, 120, 10);
+		// drawArc(150, 150, 0, 90, .2, 60, 10);
+		// drawArc(150, 150, 90, 270, .4, 60, 10);
+		// drawArc(150, 150, 180, 360, .2, 60, 10);
+		//
+		// drawArc(150, 150, 0, 360, .2, 80, 10);
+		//
+		// drawArc(150, 150, 0, 360, .2, 100, 10);
+		//
+		// drawArc(150, 150, 0, 180, .4, 120, 10);
+		// drawArc(150, 150, 180, 360, .8, 120, 10);
 
 	}
 
-	sampleDrawPrint();
+	function normalize(value, min, max) {
+		return normalized = (value - min) / (max - min) * 360;
+	}
 
-	 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-		  var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
 
-	   return {
-		x: centerX + (radius * Math.cos(angleInRadians)),
-		y: centerY + (radius * Math.sin(angleInRadians))
-	   };
-	  }
+	d3.csv("./static/data/FP.csv", function(data) {
+		sampleDrawPrint();
+		var maybe = Object.keys( data ).map(function ( key ) { return data[key]; });
+		console.log(maybe);
+		var max = Math.max.apply( null, maybe );
+		console.log(max);
+		for (var index in data) {
+			for(var key in data[index]) {
+				if(key.endsWith("E")) {
 
-	 function describeArc(x, y, radius, startAngle, endAngle){
+				}
+			}
+		}
 
-		var start = polarToCartesian(x, y, radius, endAngle);
-		var end = polarToCartesian(x, y, radius, startAngle);
+	});
 
-		var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
 
-		var d = [
-			"M", start.x, start.y, 
-			"A", radius, radius, 1, arcSweep, 0, end.x, end.y,
-			"L", x,y,
-			"L", start.x, start.y,
-			"innerRadius", 100,
-			"outerRadius", 50,
-			].join(" ");
 
-		   return d;       
-	  }
-
-	d3.select("#arc1").append("path").attr("d", describeArc(200, 200, 100, 0, 90));
 };
