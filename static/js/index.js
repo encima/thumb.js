@@ -4,7 +4,12 @@ window.onload = function() {
 	var vis = d3.select("#thumb")
 	var pi = Math.PI;
 
-	function drawArc(x, y, sAng, eAng, opacity, radius, thickness, txt) {
+	function drawArc(x, y, sAng, eAng, opacity, radius, thickness, txt, scaleX, scaleY) {
+		if(scaleX === undefined)
+			scaleX = 1;
+		if(scaleY === undefined)
+			scaleY = 1;
+
 		if(opacity === undefined) opacity = 1;
 		var arc = d3.svg.arc()
 			.innerRadius(radius - thickness)
@@ -19,12 +24,9 @@ window.onload = function() {
       .attr("stroke-width", "5")
       .attr("fill", "gray")
 			.attr("opacity", opacity)
-			.attr("transform", "translate(" + x + "," + y + ") scale(1,1.4)")
+			.attr("transform", "translate(" + x + "," + y + ") scale(" + scaleX + ", " + scaleY + ")")
 			.append("svg:title")
    		.text(function(d) { return txt; });
-
-			console.log(path.style("width"));
-
 
 		// var totalLength = path.node().getTotalLength();
 
@@ -37,8 +39,6 @@ window.onload = function() {
 		// 		.ease("linear")
 		// 		.attr("stroke-dashoffset", 0);
 		// });
-
-
 	}
 
 	function pureDrawArc() {
@@ -64,8 +64,8 @@ window.onload = function() {
 
 	}
 
-	function normalise(value, min, max) {
-		return (value - min) / (max - min) * 360;
+	function normalise(value, min, max, scale) {
+		return (value - min) / (max - min) * scale;
 	}
 
 	var keys = ["very E","really E","so E",	"totally E","PM like E","PM I mean E","PM you know E","H sort of E","all sort of","all kind of","or something E","or anything E",	"and stuff E",	"all E","probably E",	"perhaps E",	"possibly E",	"maybe E"]
@@ -86,18 +86,18 @@ window.onload = function() {
 			values[keys[i]] = vals(data, keys[i]);
 		}
 		var sx = 500,
-				sy = 500,
+				sy = 600,
 				person = data[0],
-		    inner = 40;
+		    inner = 30;
 		for(var index in keys) {
 			  var key = keys[index];
 				angle_start = 360 * Math.random();
-				angle_val = normalise(person[key], values[key]["min"], values[key]["max"]);
+				angle_val = normalise(person[key], values[key]["min"], values[key]["max"], 1440);
 				angle_opaq = 360 - angle_val;
 				var step = inner + (20 * (parseInt(index)+1));
 				if(angle_val > 0)
-					drawArc(sx, sy, angle_start, angle_start + angle_val, 0.8, step, 10, key + ": " + person[key]);
-				drawArc(sx, sy, 0, 360, 0.2, step, 10, key + ": " + person[key] + "(" + angle_val + ")");
+					drawArc(sx, sy, angle_start, angle_start + angle_val, 0.8, step, 10, key + ": " + person[key], 0.7, 1.4);
+				drawArc(sx, sy, 0, 360, 0.2, step, 10, key + ": " + person[key] + "(" + angle_val + ")", 0.7, 1.4);
 
 		}
 
