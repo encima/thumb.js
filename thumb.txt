@@ -5,3 +5,10 @@
 5. Draw arc with length based on feature value 
 6. Draw next feature at x/2+offset + prev_x, y/2+offset +prev_y
 7. Continue untl end of features 
+
+
+#TODO
+
+* Config file
+* Change colours
+* Load in CSV and dynamic redraw of Arcs

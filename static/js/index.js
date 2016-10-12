@@ -24,11 +24,12 @@ window.onload = function() {
 
 			var thumb_arc = g.append("path")
 				.attr("d", arc)
-				.attr("stroke", "steelblue")
-		    .attr("stroke-width", "5")
-		    .attr("fill", "gray")
+				//.attr("stroke", "steelblue")
+		    //.attr("stroke-width", "1")
+		    .attr("fill", "steelblue")
 				.style("opacity", 0)
 				.attr("transform", "translate(" + x + "," + y + ") scale(" + scaleX + ", " + scaleY + ")")
+				//.append("svg:title")
 				.text(function(d) { return txt; });
 
 		if(delay > 0) {
