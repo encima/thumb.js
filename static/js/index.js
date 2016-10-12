@@ -16,7 +16,7 @@ window.onload = function() {
 		opacity = opacity !== undefined ? opacity : 1;
 		delay = delay !== undefined ? delay : 0;
 
-		 var arc = d3.svg.arc()
+		 var arc = d3.arc()
 	 		.innerRadius(radius - thickness)
 	 		.outerRadius(radius)
 	 		.startAngle(sAng * (pi/180)) //converting from degs to radians
@@ -30,11 +30,25 @@ window.onload = function() {
 				.style("opacity", 0)
 				.attr("transform", "translate(" + x + "," + y + ") scale(" + scaleX + ", " + scaleY + ")")
 				.text(function(d) { return txt; });
+
 		if(delay > 0) {
+				// thumb_arc.transition().duration(delay).style("opacity", opacity).delay(function(d, i) { return i * delay })
 				thumb_arc.transition().duration(delay).style("opacity", opacity).delay(function(d, i) { return i * delay })
 		}else{
 				thumb_arc.style("opacity", opacity)
 		}
+
+
+function arcTween(newAngle) {
+  return function(d) {
+    var interpolate = d3.interpolate(d.endAngle, newAngle);
+    return function(t) {
+      d.endAngle = interpolate(t);
+      return arc(d);
+    };
+  };
+}
+
 	}
 
 	function pureDrawArc() {
@@ -48,26 +62,14 @@ window.onload = function() {
 		}
 	}
 
-	function sampleDrawPrint() {
-		var sx = 150,
-		    sy = 150,
-				start = 60;
-		for (var i = 10; i <= 60; i+=20) {
-			drawArc(150, 150, 0, 90, .6, start + i, 10);
-			drawArc(150, 150, 90, 270, .6, start + i, 10);
-			drawArc(150, 150, 270, 360, .6, start + i, 10);
-		}
-
-	}
-
 	function getURLParameter(name) {
   	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 	}
 
-// 	function selectArcs() {
-//     d3.selectAll("g.arc > path")
-//         .each(arcTween);
-// }
+	function selectArcs() {
+    d3.selectAll("g.arc > path")
+        .each(arcTween);
+}
 
 function arcTween(){
     d3.select(this)
@@ -95,7 +97,7 @@ function tweenArc(b) {
 	function vals(ds, key) {
 		var final = {};
 		final["key"] = key;
-		final["values"] = Object.keys( ds ).map(function ( index ) { return ds[index][key]; });
+		final["values"] = ds.map(function(a) {return a[key];});
 		final["max"] = Math.max.apply( null, final["values"] );
 		final["min"] = Math.min.apply( null, final["values"] );
 		return final;
@@ -120,8 +122,7 @@ function tweenArc(b) {
 				var step = inner + (20 * (parseInt(index)+1));
 				drawArc(sx, sy, 0, 360, 0.2, step, 10, key + ": " + person[key] + "(" + angle_val + ")", 0.7, 1.4, 0);
 				if(angle_val > 0)
-					drawArc(sx, sy, angle_start, angle_start + angle_val, 0.8, step, 10, key + ": " + person[key], 0.7, 1.4, 3000);
-
+						drawArc(sx, sy, angle_start, angle_start + angle_val, 0.8, step, 10, key + ": " + person[key], 0.7, 1.4, 4000);
 
 		}
 
